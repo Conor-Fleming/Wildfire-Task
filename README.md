@@ -24,7 +24,7 @@ From here you can simply use `$ go run main.go` and it will start the server.
 Once running, you can use curl to make requests to ```localhost:8080```
 ```
 $ curl localhost:8080                                                                                   
-Dilbag Alimento does infinit loops in 4 seconds.
+Clive Moodie programs occupy 150% of CPU, even when they are not executing.
 ```
 
-Alternatively once the server has been started you can navigate to (http://localhost:8080/) and user refresh for new content.
+Alternatively once the server has been started you can navigate to (http://localhost:8080/) and use refresh for new content.

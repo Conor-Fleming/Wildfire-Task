@@ -28,3 +28,7 @@ Clive Moodie programs occupy 150% of CPU, even when they are not executing.
 ```
 
 Alternatively once the server has been started you can navigate to (http://localhost:8080/) and use refresh for new content.
+
+## Testing
+To test this program I created a simple client that used a wait group and go routine that sent off 1000 requests to the service at the same time. 
+This test returned all successful status codes of 200. (yay)

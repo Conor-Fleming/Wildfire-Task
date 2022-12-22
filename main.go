@@ -23,6 +23,12 @@ type JokeResponse struct {
 func main() {
 	first, last := getNameData()
 	getJokeData(first, last)
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(getJokeData(first, last)))
+	})
+
+	http.ListenAndServe(":8080", nil)
 }
 
 func getNameData() (string, string) {
@@ -33,11 +39,13 @@ func getNameData() (string, string) {
 	}
 	defer nameResp.Body.Close()
 
+	//reading response to byte slice
 	nameRespData, err := ioutil.ReadAll(nameResp.Body)
 	if err != nil {
 		log.Fatal("Read Response Data", err)
 	}
 
+	// Unmarshalling JSON to name variable of type NameResponse (declared above)
 	var name NameResponse
 	err = json.Unmarshal(nameRespData, &name)
 	if err != nil {
@@ -47,7 +55,7 @@ func getNameData() (string, string) {
 	return name.FirstName, name.LastName
 }
 
-func getJokeData(first, last string) {
+func getJokeData(first, last string) string {
 	//formatting url with given first and last name
 	jokeURL := fmt.Sprintf("http://joke.loc8u.com:8888/joke?limitTo=nerdy&firstName=%s&lastName=%s", first, last)
 
@@ -58,16 +66,18 @@ func getJokeData(first, last string) {
 	}
 	defer jokeResp.Body.Close()
 
+	//reading response to byte slice
 	jokeRespData, err := ioutil.ReadAll(jokeResp.Body)
 	if err != nil {
 		log.Fatal("Read Response Data", err)
 	}
 
+	//Unmarshalling JSON to joke variable of type JokeResponse
 	var joke JokeResponse
 	err = json.Unmarshal(jokeRespData, &joke)
 	if err != nil {
 		log.Fatal("Unmarshal Name", err)
 	}
 
-	fmt.Println(joke.Value.Joke)
+	return joke.Value.Joke
 }

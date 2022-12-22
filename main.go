@@ -42,21 +42,21 @@ func getNameData() (string, string) {
 	//Calling Api for the random name
 	nameResp, err := http.Get("https://names.mcquay.me/api/v0/")
 	if err != nil {
-		log.Fatal("Getting name api response", err)
+		fmt.Println("Getting name api response: ", err)
 	}
 	defer nameResp.Body.Close()
 
 	//reading response to byte slice
 	nameRespData, err := ioutil.ReadAll(nameResp.Body)
 	if err != nil {
-		log.Fatal("Read Response Data", err)
+		log.Fatal("Read Response Data: ", err)
 	}
 
 	// Unmarshalling JSON to name variable of type NameResponse (declared above)
 	var name NameResponse
 	err = json.Unmarshal(nameRespData, &name)
 	if err != nil {
-		log.Fatal("Unmarshal Name", err)
+		log.Print("Unmarshal Name: ", err)
 	}
 
 	return name.FirstName, name.LastName
@@ -66,24 +66,24 @@ func getJokeData(first, last string) string {
 	//formatting url with given first and last name
 	jokeURL := fmt.Sprintf("http://joke.loc8u.com:8888/joke?limitTo=nerdy&firstName=%s&lastName=%s", first, last)
 
-	//Calling Api for the random name
+	//Calling Api for the random joke
 	jokeResp, err := http.Get(jokeURL)
 	if err != nil {
-		log.Fatal("Getting name api response", err)
+		log.Print("Getting joke api response: ", err)
 	}
 	defer jokeResp.Body.Close()
 
 	//reading response to byte slice
 	jokeRespData, err := ioutil.ReadAll(jokeResp.Body)
 	if err != nil {
-		log.Fatal("Read Response Data", err)
+		log.Print("Read Response Data: ", err)
 	}
 
 	//Unmarshalling JSON to joke variable of type JokeResponse
 	var joke JokeResponse
 	err = json.Unmarshal(jokeRespData, &joke)
 	if err != nil {
-		log.Fatal("Unmarshal Name", err)
+		log.Print("Unmarshal Joke: ", err)
 	}
 
 	output := joke.Value.Joke + "\n"

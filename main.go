@@ -15,20 +15,27 @@ type NameResponse struct {
 
 type JokeResponse struct {
 	Value struct {
-		Id   int    `json:"id"`
 		Joke string `json:"joke"`
 	} `json:"value"`
 }
 
 func main() {
-	first, last := getNameData()
-	getJokeData(first, last)
-
+	// Set up handler function for the "/" route
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Get first and last names from getNameData() and use those as args in getJokeData()
+		// write the returned joke to the response
+		first, last := getNameData()
 		w.Write([]byte(getJokeData(first, last)))
 	})
 
-	http.ListenAndServe(":8080", nil)
+	// Create the http server at localhost:8080
+	server := &http.Server{
+		Addr:    ":8080",
+		Handler: nil,
+	}
+
+	//Start the server
+	server.ListenAndServe()
 }
 
 func getNameData() (string, string) {
@@ -79,5 +86,7 @@ func getJokeData(first, last string) string {
 		log.Fatal("Unmarshal Name", err)
 	}
 
-	return joke.Value.Joke
+	output := joke.Value.Joke + "\n"
+
+	return output
 }

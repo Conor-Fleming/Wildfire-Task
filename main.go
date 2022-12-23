@@ -45,12 +45,13 @@ func main() {
 		wg.Wait()
 
 		if name != nil && joke != nil {
-			joke.Value.Joke = strings.Replace(joke.Value.Joke, "--first--", name.FirstName, 1)
-			joke.Value.Joke = strings.Replace(joke.Value.Joke, "--last--", name.LastName, 1)
+			joke.Value.Joke = strings.Replace(joke.Value.Joke, "first", name.FirstName, 1)
+			joke.Value.Joke = strings.Replace(joke.Value.Joke, "last", name.LastName, 1)
 
 			w.Write([]byte(joke.Value.Joke))
+		} else {
+			http.Error(w, "There was an error getting the data", http.StatusInternalServerError)
 		}
-		http.Error(w, "There was an error getting the data", http.StatusInternalServerError)
 	})
 
 	// Create the http server at localhost:8080
@@ -92,7 +93,7 @@ func getNameData() (*NameResponse, error) {
 
 func getJokeData() (*JokeResponse, error) {
 	//formatting url with given first and last name
-	jokeURL := fmt.Sprintf("http://joke.loc8u.com:8888/joke?limitTo=nerdy&firstName=--first--&lastName=--last--")
+	jokeURL := fmt.Sprintf("http://joke.loc8u.com:8888/joke?limitTo=nerdy&firstName=first&lastName=last")
 
 	//Calling Api for the random joke
 	jokeResp, err := http.Get(jokeURL)

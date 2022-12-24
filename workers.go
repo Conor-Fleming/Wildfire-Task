@@ -2,13 +2,12 @@ package main
 
 import (
 	"errors"
-	"log"
 	"strings"
+	"sync"
 )
 
 func startWorkers() (string, error) {
-	//Using wait groups
-	/*var wg sync.WaitGroup
+	var wg sync.WaitGroup
 	wg.Add(2)
 
 	var name *NameResponse
@@ -24,8 +23,10 @@ func startWorkers() (string, error) {
 		joke, _ = JokeData()
 		wg.Done()
 	}()
-	wg.Wait()*/
+	wg.Wait()
 
+	/* Tried an implementation with channels for practice
+	// Leaving commented as I find that using wait groups above is a bit easier to read and understand
 	nameChan := make(chan *NameResponse)
 	jokeChan := make(chan *JokeResponse)
 
@@ -45,6 +46,7 @@ func startWorkers() (string, error) {
 	}()
 	name := <-nameChan
 	joke := <-jokeChan
+	*/
 
 	//doing it this way so the JokeData() func doesnt have to wait for the NameData values before we call it.
 	if name != nil && joke != nil {

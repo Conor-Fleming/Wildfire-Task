@@ -8,8 +8,7 @@ import (
 func startWorkers() (string, error) {
 
 	// TODO:
-	// - Look into error handling with channels.
-	// - Should these channels be buffered?
+	// - Look into best practice error handling with channels.
 
 	nameChan := make(chan *NameResponse)
 	jokeChan := make(chan *JokeResponse)

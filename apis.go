@@ -8,12 +8,11 @@ import (
 	"net/http"
 )
 
-func NameData() (*NameResponse, error) {
+func NameWorker(c chan<- *NameResponse) {
 	//Calling Api for the random name
 	nameResp, err := http.Get("https://names.mcquay.me/api/v0/")
 	if err != nil {
 		log.Print("Getting name api response: ", err)
-		return nil, err
 	}
 	defer nameResp.Body.Close()
 
@@ -21,7 +20,6 @@ func NameData() (*NameResponse, error) {
 	nameRespData, err := ioutil.ReadAll(nameResp.Body)
 	if err != nil {
 		log.Print("Read Response Data: ", err)
-		return nil, err
 	}
 
 	// Unmarshalling JSON to name variable of type NameResponse (declared above)
@@ -29,13 +27,12 @@ func NameData() (*NameResponse, error) {
 	err = json.Unmarshal(nameRespData, &name)
 	if err != nil {
 		log.Print("Unmarshal Name: ", err)
-		return nil, err
 	}
 
-	return name, nil
+	c <- name
 }
 
-func JokeData() (*JokeResponse, error) {
+func JokeWorker(c chan<- *JokeResponse) {
 	// TODO: use url package to build these strings properly
 
 	//formatting url with given first and last name
@@ -45,7 +42,6 @@ func JokeData() (*JokeResponse, error) {
 	jokeResp, err := http.Get(jokeURL)
 	if err != nil {
 		log.Print("Getting joke api response: ", err)
-		return nil, err
 	}
 	defer jokeResp.Body.Close()
 
@@ -53,7 +49,7 @@ func JokeData() (*JokeResponse, error) {
 	jokeRespData, err := ioutil.ReadAll(jokeResp.Body)
 	if err != nil {
 		log.Print("Read Response Data: ", err)
-		return nil, err
+
 	}
 
 	//Unmarshalling JSON to joke variable of type JokeResponse
@@ -61,8 +57,7 @@ func JokeData() (*JokeResponse, error) {
 	err = json.Unmarshal(jokeRespData, &joke)
 	if err != nil {
 		log.Print("Unmarshal Joke: ", err)
-		return nil, err
 	}
 
-	return joke, nil
+	c <- joke
 }

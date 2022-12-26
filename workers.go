@@ -3,21 +3,27 @@ package main
 import (
 	"errors"
 	"strings"
+	"sync"
 )
 
 func startWorkers() (string, error) {
+	var wg sync.WaitGroup
+	wg.Add(2)
 
-	// TODO:
-	// - Look into best practice error handling with channels.
+	var name *NameResponse
+	var joke *JokeResponse
 
-	nameChan := make(chan *NameResponse)
-	jokeChan := make(chan *JokeResponse)
-
-	go NameWorker(nameChan)
-	go JokeWorker(jokeChan)
-
-	name := <-nameChan
-	joke := <-jokeChan
+	//unsure about error handling in this case
+	//printed message to log and return nil upon error in these two functions so i suppose the error is handled if code falls through on line 28
+	go func() {
+		name, _ = NameData()
+		wg.Done()
+	}()
+	go func() {
+		joke, _ = JokeData()
+		wg.Done()
+	}()
+	wg.Wait()
 
 	//doing it this way so the JokeData() func doesnt have to wait for the NameData values before we call it.
 	if name != nil && joke != nil {

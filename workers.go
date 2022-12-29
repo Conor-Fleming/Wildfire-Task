@@ -8,8 +8,8 @@ import (
 func startWorkers() (string, error) {
 
 	// TODO:
-	// - Look into error handling with channels.
-	// - Should these channels be buffered?
+	// Need to look into best practices for handling errors with channels
+	// they are currently being logged in the the individula functions within api.go
 
 	nameChan := make(chan *NameResponse)
 	jokeChan := make(chan *JokeResponse)

@@ -9,7 +9,7 @@ func startWorkers() (string, error) {
 
 	// TODO:
 	// Need to look into best practices for handling errors with channels
-	// they are currently being logged in the the individula functions within api.go
+	// they are currently being logged in the the individual functions within api.go
 
 	nameChan := make(chan *NameResponse)
 	jokeChan := make(chan *JokeResponse)
@@ -17,6 +17,7 @@ func startWorkers() (string, error) {
 	go NameWorker(nameChan)
 	go JokeWorker(jokeChan)
 
+	// Channels block until value is available
 	name := <-nameChan
 	joke := <-jokeChan
 

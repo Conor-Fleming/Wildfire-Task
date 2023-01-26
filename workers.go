@@ -26,7 +26,7 @@ func startWorkers() (string, error) {
 	}()
 	wg.Wait()
 
-	//doing it this way so the JokeData() func doesnt have to wait for the NameData values before we call it.
+  // If either value is empty fall through
 	if name != nil && joke != nil {
 		// Replace name values in Joke with values from Name API
 		joke.Value.Joke = strings.ReplaceAll(joke.Value.Joke, "*first", name.FirstName)

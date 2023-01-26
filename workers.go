@@ -13,8 +13,9 @@ func startWorkers() (string, error) {
 	var name *NameResponse
 	var joke *JokeResponse
 
-	//unsure about error handling in this case
-	//printed message to log and return nil upon error in these two functions so i suppose the error is handled if code falls through on line 28
+	// Errors are not used here as it seemed redundant.
+	// If there is an error returned from either NameData() or JokeData()
+	// the code will fall through on line 30 and return the appropriate error
 	go func() {
 		name, _ = NameData()
 		wg.Done()

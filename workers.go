@@ -3,25 +3,30 @@ package main
 import (
 	"errors"
 	"strings"
+	"sync"
 )
 
 func startWorkers() (string, error) {
+	var wg sync.WaitGroup
+	wg.Add(2)
 
-	// TODO:
-	// Need to look into best practices for handling errors with channels
-	// they are currently being logged in the the individual functions within api.go
+	var name *NameResponse
+	var joke *JokeResponse
 
-	nameChan := make(chan *NameResponse)
-	jokeChan := make(chan *JokeResponse)
+	// Errors are not used here as it seemed redundant.
+	// If there is an error returned from either NameData() or JokeData()
+	// the code will fall through on line 30 and return the appropriate error
+	go func() {
+		name, _ = NameData()
+		wg.Done()
+	}()
+	go func() {
+		joke, _ = JokeData()
+		wg.Done()
+	}()
+	wg.Wait()
 
-	go NameWorker(nameChan)
-	go JokeWorker(jokeChan)
-
-	// Channels block until value is available
-	name := <-nameChan
-	joke := <-jokeChan
-
-	//doing it this way so the JokeData() func doesnt have to wait for the NameData values before we call it.
+  // If either value is empty fall through
 	if name != nil && joke != nil {
 		// Replace name values in Joke with values from Name API
 		joke.Value.Joke = strings.ReplaceAll(joke.Value.Joke, "*first", name.FirstName)
